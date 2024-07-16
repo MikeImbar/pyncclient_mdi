@@ -19,7 +19,7 @@ long_description = (
     + '\n')
 
 setup(
-    name='pyncclient',
+    name='pyncclient_email',
     version=version,
     author='Marco Nastasi',
     author_email='m.nastasi@pragmaticminds.de',
