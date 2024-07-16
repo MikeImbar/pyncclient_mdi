@@ -911,6 +911,56 @@ class Client(object):
             )
         raise HTTPResponseError(res)
 
+    def share_file_with_email(self, path, email, **kwargs):
+        """Shares a remote file with specified email
+
+        :param path: path to the remote file to share
+        :param user: the email address we want to share a file/folder
+        :param perms (optional): permissions of the shared object
+            defaults to read only (1)
+            https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html
+        :param remote_user (optional): True if it is a federated users
+            defaults to False if it is a local user
+        :returns: instance of :class:`ShareInfo` with the share info
+            or False if the operation failed
+        :raises: HTTPResponseError in case an HTTP error status was returned
+        """
+        perms = kwargs.get('perms', None)
+        public_upload = kwargs.get('public_upload', 'false')
+        password = kwargs.get('password', None)
+
+        path = self._normalize_path(path)
+        post_data = {
+            # 'shareType': self.OCS_SHARE_TYPE_REMOTE,
+            'shareType': 4,
+            'shareWith': email,
+            'path': self._encode_string(path),
+            'permissions': perms
+        }
+
+        res = self._make_ocs_request(
+            'POST',
+            self.OCS_SERVICE_SHARE,
+            'shares',
+            data=post_data
+        )
+
+        if self._debug:
+            print('OCS share_file request for file %s with permissions %i '
+                  'returned: %i' % (path, perms, res.status_code))
+        if res.status_code == 200:
+            tree = ET.fromstring(res.content)
+            self._check_ocs_status(tree)
+            data_el = tree.find('data')
+            return ShareInfo(
+                                {
+                                    'id': data_el.find('id').text,
+                                    'path': path,
+                                    'permissions': perms
+                                }
+            )
+        raise HTTPResponseError(res)
+        
     def is_shared(self, path):
         """Checks whether a path is already shared
 
