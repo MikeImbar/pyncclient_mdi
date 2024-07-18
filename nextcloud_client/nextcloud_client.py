@@ -956,6 +956,8 @@ class Client(object):
             data=post_data
         )
 
+        print(res)
+
         if self._debug:
             print('OCS share_file request for file %s with permissions %i '
                   'returned: %i' % (path, perms, res.status_code))
