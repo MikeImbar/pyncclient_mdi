@@ -945,7 +945,7 @@ class Client(object):
         if isinstance(password, six.string_types):
             post_data['password'] = password
         if expiration_date is not None:
-            post_data['expireDate '] = expiration_date
+            post_data['expireDate'] = expiration_date
         if perms:
             post_data['permissions'] = perms
         
