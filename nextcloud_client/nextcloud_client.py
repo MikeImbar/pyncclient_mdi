@@ -323,6 +323,7 @@ class Client(object):
     OCS_SHARE_TYPE_GROUP = 1
     OCS_SHARE_TYPE_LINK = 3
     OCS_SHARE_TYPE_REMOTE = 6
+    OCS_SHARE_TYPE_EMAIL = 4 
 
     def __init__(self, url, **kwargs):
         """Instantiates a client
@@ -933,8 +934,7 @@ class Client(object):
 
         path = self._normalize_path(path)
         post_data = {
-            # 'shareType': self.OCS_SHARE_TYPE_REMOTE,
-            'shareType': 4,
+            'shareType': self.OCS_SHARE_TYPE_EMAIL,
             'shareWith': email,
             'path': self._encode_string(path),
             'permissions': perms
@@ -944,7 +944,7 @@ class Client(object):
             post_data['publicUpload'] = str(public_upload).lower()
         if isinstance(password, six.string_types):
             post_data['password'] = password
-        if expiration_date is not None:
+        if expiration_date:
             post_data['expireDate'] = expiration_date
         if perms:
             post_data['permissions'] = perms
