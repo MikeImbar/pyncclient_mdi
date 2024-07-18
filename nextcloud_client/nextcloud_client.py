@@ -948,7 +948,7 @@ class Client(object):
             post_data['expireDate'] = expiration_date
         if perms:
             post_data['permissions'] = perms
-        
+        print(post_data)
         res = self._make_ocs_request(
             'POST',
             self.OCS_SERVICE_SHARE,
@@ -956,7 +956,7 @@ class Client(object):
             data=post_data
         )
 
-        print(post_data)
+        
 
         if self._debug:
             print('OCS share_file request for file %s with permissions %i '
