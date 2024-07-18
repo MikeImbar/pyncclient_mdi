@@ -916,11 +916,12 @@ class Client(object):
 
         :param path: path to the remote file to share
         :param user: the email address we want to share a file/folder
-        :param perms (optional): permissions of the shared object
-            defaults to read only (1)
+        :param perms (optional): permission of the shared object
+        defaults to read only (1)
+        :param public_upload (optional): allows users to upload files or folders
+        :param password (optional): sets a password
+        :param expiration_date (optional): sets an expiration date in ‘YYYY-MM-DD’ format
             https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html
-        :param remote_user (optional): True if it is a federated users
-            defaults to False if it is a local user
         :returns: instance of :class:`ShareInfo` with the share info
             or False if the operation failed
         :raises: HTTPResponseError in case an HTTP error status was returned
@@ -928,6 +929,7 @@ class Client(object):
         perms = kwargs.get('perms', None)
         public_upload = kwargs.get('public_upload', 'false')
         password = kwargs.get('password', None)
+        expiration_date = kwargs.get('expiration_date', None)
 
         path = self._normalize_path(path)
         post_data = {
@@ -938,6 +940,15 @@ class Client(object):
             'permissions': perms
         }
 
+        if (public_upload is not None) and (isinstance(public_upload, bool)):
+            post_data['publicUpload'] = str(public_upload).lower()
+        if isinstance(password, six.string_types):
+            post_data['password'] = password
+        if expiration_date is not None:
+            post_data['expireDate '] = expiration_date
+        if perms:
+            post_data['permissions'] = perms
+        
         res = self._make_ocs_request(
             'POST',
             self.OCS_SERVICE_SHARE,
