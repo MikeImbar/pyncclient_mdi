@@ -867,6 +867,7 @@ class Client(object):
         defaults to read only (1)
         :param public_upload (optional): allows users to upload files or folders
         :param password (optional): sets a password
+        :param expiration date (optional): sets an expiration date
         https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html
         :param name (optional): display name for the link
         :returns: instance of :class:`ShareInfo` with the share info
@@ -875,8 +876,18 @@ class Client(object):
         """
         perms = kwargs.get('perms', None)
         public_upload = kwargs.get('public_upload', 'false')
-        password = kwargs.get('password', None)
+
+        if password != "":
+            password = kwargs.get('password', None)
+        elif password == "":
+            password = None
+
         name = kwargs.get('name', None)
+        
+        if expiration_date != "":
+            expiration_date = kwargs.get('expiration_date', None)
+        elif expiration_date == "": 
+            expiration_date = None
 
         path = self._normalize_path(path)
         post_data = {
@@ -889,6 +900,8 @@ class Client(object):
             post_data['password'] = password
         if name is not None:
             post_data['name'] = self._encode_string(name)
+        if expiration_date is not None:
+            post_data['expireDate'] = expiration_date
         if perms:
             post_data['permissions'] = perms
 
