@@ -876,18 +876,10 @@ class Client(object):
         """
         perms = kwargs.get('perms', None)
         public_upload = kwargs.get('public_upload', 'false')
-
-        if password != "":
-            password = kwargs.get('password', None)
-        elif password == "":
-            password = None
-
+        password = kwargs.get('password', None)
         name = kwargs.get('name', None)
-        
-        if expiration_date != "":
-            expiration_date = kwargs.get('expiration_date', None)
-        elif expiration_date == "": 
-            expiration_date = None
+        expiration_date = kwargs.get('expiration_date', None)
+        print(password)
 
         path = self._normalize_path(path)
         post_data = {
