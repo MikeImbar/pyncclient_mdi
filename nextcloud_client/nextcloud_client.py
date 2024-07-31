@@ -879,7 +879,6 @@ class Client(object):
         password = kwargs.get('password', None)
         name = kwargs.get('name', None)
         expiration_date = kwargs.get('expiration_date', None)
-        print(password)
 
         path = self._normalize_path(path)
         post_data = {
@@ -897,12 +896,17 @@ class Client(object):
         if perms:
             post_data['permissions'] = perms
 
+        print(post_data)
+
         res = self._make_ocs_request(
             'POST',
             self.OCS_SERVICE_SHARE,
             'shares',
             data=post_data
         )
+
+        print(res)
+        
         if res.status_code == 200:
             tree = ET.fromstring(res.content)
             self._check_ocs_status(tree)
